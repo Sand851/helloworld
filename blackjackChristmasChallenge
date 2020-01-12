@@ -1,0 +1,166 @@
+import tkinter
+import random
+
+cardList = list()
+playerValue = 0
+playerWins = 0
+compWins = 0
+
+window = tkinter.Tk()
+window.title("Blackjack")
+
+def getCard():
+    while True:
+        global cardSuit
+        randNum1 = random.randint(1,4)
+        if randNum1 == 1:
+            cardSuit = "Hearts"
+        elif randNum1 == 2:
+            cardSuit = "Spades"
+        elif randNum1 == 3:
+            cardSuit = "Clubs"
+        elif randNum1 == 4:
+            cardSuit = "Diamonds"
+        global card
+        global cardValue
+        randNum2 = random.randint(1,13)
+        if randNum2 == 1:
+            card = "Ace of"
+            cardValue = 11
+        elif randNum2 == 11:
+            card = "Jack of"
+            cardValue = 10
+        elif randNum2 == 12:
+            card = "Queen of"
+            cardValue = 10
+        elif randNum2 == 13:
+            card = "King of"
+            cardValue = 10
+        else:
+            card = str(randNum2)
+            cardValue = randNum2
+        if card + cardSuit in cardList:
+            continue
+        else:
+            print("Your card is " + card + " " + cardSuit)
+            cardID = card + cardSuit
+            cardList.insert(0, cardID)
+            break
+
+def ace():
+    global cardValue
+    while True:
+        aceValue = input("What would you like your ace's value to be, 1 or 11?\n")
+        if aceValue == "1":
+            cardValue = 1
+            return 1
+        elif aceValue == "11":
+            cardValue = 11
+            return 11
+        else:
+            print("Invalid answer, please use the numerical 1 or 11")
+            continue
+
+def playRound():
+    global playerValue
+    global cardValue
+    global compWins
+    global playerWins
+    while True:
+        getCard()
+        if cardValue == 11:
+            ace()
+            playerValue = playerValue + cardValue
+        else:
+            playerValue = playerValue + cardValue
+        print("Your cards' value is " + str(playerValue))
+        if playerValue == 21:
+            print("Blackjack! Well done, you win with a score of 21")
+            input("")
+            playerWins = playerWins + 1
+            return("Round Over")
+        elif playerValue > 21:
+            print("Gone Bust! You lose this round with a score of " + str(playerValue))
+            input("")
+            compWins = compWins + 1
+            return("Round Over")
+        elif playerValue < 13:
+            print("Score not high enough to stick")
+            input("")
+            continue
+        elif playerValue > 12:
+            x = 1
+            while x == 1:
+                ans = input("Would you like to stick or draw?\n1)Stick\n2)Draw\n")
+                if ans == "1":
+                    print("Computer's turn")
+                    input("")
+                    computerTurn()
+                    return("")
+                elif ans == "2":
+                    x = 0
+                    continue
+                else:
+                    print("Invalid answer")
+                    continue
+
+def computerTurn():
+    global playerValue
+    global playerWins
+    global compWins
+    getCard()
+    compValue = cardValue
+    getCard()
+    compValue = compValue + cardValue
+    while True:
+        if compValue == 22:
+            print("Computer's gone bust!")
+            playerWins = playerWins + 1
+            return("Round Over")
+        elif compValue < 13:
+            getCard()
+            compValue = compValue + cardValue
+            continue
+        else:
+            print("Computer's score is " + str(compValue))
+            print("Your score is " + str(playerValue))
+            if compValue < playerValue:
+                print("Well Done! You won")
+                playerWins = playerWins + 1
+                return("Round Over")
+            else:
+                print("Bad Luck! You lost")
+                compWins = compWins + 1
+                return("Round Over")
+
+def menu():
+    global playerValue
+    global compValue
+    while True:
+        menu1 = input("Would you like to play a round, check your stats against the computer, learn the rules or quit?\n1)Play\n2)Stats\n3)Rules\n4)Quit\n")
+        if menu1 == "1":
+            playRound()
+            print("Reshuffling deck...")
+            del cardList[:]
+            print("Resetting scores...")
+            input("")
+            playerValue = 0
+            compValue = 0
+            continue
+        elif menu1 == "2":
+            print("You have won " + str(playerWins) + " times")
+            print("You have lost " + str(compWins) + " times")
+            input("")
+            continue
+        elif menu1 == "3":
+            print("You draw 2 cards, then can choose to either draw again or play with your current value. The objective is to reach 21. You must draw if your value is under 13.")
+            input("")
+            continue
+        elif menu1 == "4":
+            print("Quitting")
+            break
+        else:
+            print("Invalid answer, please use the numeric 1, 2, 3 or 4")
+            continue
+
+menu()
