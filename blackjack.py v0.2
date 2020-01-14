@@ -1,0 +1,214 @@
+import tkinter as tk
+import random
+import sys
+
+cardList = list()
+pngCardIDList = list()
+playerValue = 0
+playerWins = 0
+compWins = 0
+pngCardIDList.insert(0,"blank-png.png")
+pngCardIDList.insert(0,"blank-png.png")
+pngCardIDList.insert(0,"blank-png.png")
+
+
+
+"""def playRound():
+    global playerValue
+    global cardValue
+    global compWins
+    global playerWins
+    global pngCardSuit
+    global pngCard
+    while True:
+        getCard()
+        if cardValue == 11:
+            ace()
+        else:
+            playerValue = playerValue + cardValue
+        print("Your cards' value is " + str(playerValue))
+        t = input("")
+        if playerValue == 21:
+            print("Blackjack! Well done, you win with a score of 21")
+            t = input("")
+            playerWins = playerWins + 1
+            return("Round Over")
+        elif playerValue > 21:
+            print("Gone Bust! You lose this round with a score of " + str(playerValue))
+            t = input("")
+            compWins = compWins + 1
+            return("Round Over")
+        elif playerValue < 13:
+            print("Score not high enough to stick")
+            t = input("")
+            continue
+        elif playerValue > 12:
+            x = 1
+            while x == 1:
+                ans = input("Would you like to stick or draw?\n1)Stick\n2)Draw\n")
+                if ans == "1":
+                    print("Computer's turn")
+                    t = input("")
+                    computerTurn()
+                    return("")
+                elif ans == "2":
+                    x = 0
+                    continue
+                else:
+                    print("Invalid answer")
+                    t = input("")
+                    continue"""
+
+def getCard():
+    while True:
+        global cardSuit
+        global pngCardSuit
+        randNum1 = random.randint(1,4)
+        if randNum1 == 1:
+            cardSuit = "Hearts"
+            pngCardSuit = "_of_hearts.png"
+        elif randNum1 == 2:
+            cardSuit = "Spades"
+            pngCardSuit = "_of_spades.png"
+        elif randNum1 == 3:
+            cardSuit = "Clubs"
+            pngCardSuit = "_of_clubs.png"
+        elif randNum1 == 4:
+            cardSuit = "Diamonds"
+            pngCardSuit = "_of_diamonds.png"
+        global card
+        global cardValue
+        global pngCard
+        randNum2 = random.randint(1,13)
+        if randNum2 == 1:
+            card = "Ace of"
+            cardValue = 11
+            pngCard = "ace"
+        elif randNum2 == 11:
+            card = "Jack of"
+            cardValue = 10
+            pngCard = "jack"
+        elif randNum2 == 12:
+            card = "Queen of"
+            cardValue = 10
+            pngCard = "queen"
+        elif randNum2 == 13:
+            card = "King of"
+            cardValue = 10
+            pngCard = "king"
+        else:
+            card = str(randNum2)
+            cardValue = randNum2
+            pngCard = str(randNum2)
+        if card + cardSuit in cardList:
+            continue
+        else:
+            cardID = card + cardSuit
+            cardList.insert(0, cardID)
+            break
+
+def ace():
+    global rootAce
+    rootAce=tk.Tk()
+    root.title("Ace")
+    global cardValue
+    global playerValue
+    aceMessage = tk.Label(rootAce, fg="black", text="Would you like your ace to be a 1 or an 11? Select your answer then press finish", font=("Comic Sans MS",11,"bold"))
+    aceMessage.grid(row=0, column=0)
+    ace1 = tk.Button(rootAce, fg="red", text="1", command=ace1Fun, font=("Comic Sans MS",11,"bold"))
+    ace1.grid(row=1, column=0)
+    ace2 = tk.Button(rootAce, fg="blue", text="2", command=ace2Fun, font=("Comic Sans MS",11,"bold"))
+    ace2.grid(row=2, column=0)
+    endAce = tk.Button(rootAce, fg="black", text="Finish", command=rootAce.destroy, font=("Comic Sans MS",11,"bold"))
+    endAce.grid(row=3, column=0)
+    
+def ace1Fun():
+    global cardValue
+    global rootAce
+    cardValue = 1
+
+def ace2Fun():
+    global cardValue
+    global rootAce
+    cardValue = 11
+
+def computerTurn():
+    global playerValue
+    global playerWins
+    global compWins
+    getCard()
+    compValue = cardValue
+    getCard()
+    compValue = compValue + cardValue
+    while True:
+        if compValue < 13:
+            getCard()
+            compValue = compValue + cardValue
+        else:
+            print("Computer's score is " + str(compValue))
+            print("Your score is " + str(playerValue))
+            t = input("")
+            if compValue < playerValue:
+                print("Well Done! You won")
+                t = input("")
+                playerWins = playerWins + 1
+                return("Round Over")
+            else:
+                print("Bad Luck! You lost")
+                t = input("")
+                compWins = compWins + 1
+                return("Round Over")
+
+def playRound():
+    global openingMessage
+    global playButton
+    global statButton
+    global rulesButton
+    global stickButton
+    global quitButton
+    openingMessage.pack_forget()
+    playButton.pack_forget()
+    statButton.pack_forget()
+    rulesButton.pack_forget()
+    quitButton.pack_forget()
+    drawButton = tk.Button(root, fg="black", text="Twist", command=twist, font=("Comic Sans MS",11,"bold"))
+    drawButton.grid(row=0, column=1)
+    stickButton = tk.Button(root, fg="black", text="Stick", command=stick, font=("Comic Sans MS",11,"bold"))
+    stickButton.grid(row=1, column=1)
+
+def twist():
+    global cardValue
+    
+    print("Twist")
+    getCard()
+    if cardValue == 11:
+        ace()
+        playerValue = cardValue + playerValue
+    else:
+        playerValue = cardValue + playerValue
+    
+
+def stick():
+    print("Stick")
+
+def menu():
+    global openingMessage
+    global playButton
+    global statButton
+    global rulesButton
+    global stickButton
+    global quitButton
+    openingMessage = tk.Label(root, text="Welcome to blackjack!", font=("Comic Sans MS",11,"bold"))
+    openingMessage.pack()
+    playButton = tk.Button(root, fg="blue", text="Play", command=playRound, font=("Comic Sans MS",11,"bold"))
+    playButton.pack()
+    statButton = tk.Button(root, fg="red", text="Stats", font=("Comic Sans MS",11,"bold"))
+    statButton.pack()
+    rulesButton = tk.Button(root, fg="orange", text="Rules", font=("Comic Sans MS",11,"bold"))
+    rulesButton.pack()
+    quitButton = tk.Button(root, fg="green", text="Quit", command=root.destroy, font=("Comic Sans MS",11,"bold"))
+    quitButton.pack()
+    
+root = tk.Tk()
+root.title("blackjack.py")    
+menu()
